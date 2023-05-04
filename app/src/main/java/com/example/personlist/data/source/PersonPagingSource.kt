@@ -5,8 +5,7 @@ import androidx.paging.PagingState
 import java.io.IOException
 
 class PersonPagingSource(
-    private val dataSource: DataSource,
-    private val completionHandler: FetchCompletionHandler //todo: kaldırılabilir?
+    private val dataSource: DataSource
 ) : PagingSource<Int, Person>() {
 
     private var response: FetchResponse? = null //todo: bunlar load'ın içine mi alınmalı?
