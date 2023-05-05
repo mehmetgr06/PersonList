@@ -5,5 +5,6 @@ import javax.inject.Inject
 
 class GetPersonsUseCase @Inject constructor(private val personRepository: PersonRepository) {
 
-    operator fun invoke() = personRepository.getPersonList()
+    operator fun invoke(isRefreshing: Boolean = false) =
+        personRepository.getPersonList(isRefreshing)
 }

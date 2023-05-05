@@ -13,12 +13,12 @@ class PersonRepository @Inject constructor(
     private val dataSource: DataSource
 ) {
 
-    fun getPersonList(): Flow<PagingData<Person>> {
+    fun getPersonList(isRefreshing: Boolean = false): Flow<PagingData<Person>> {
         return Pager(
             config = PagingConfig(
                 pageSize = 20
             ),
-            pagingSourceFactory = { PersonPagingSource(dataSource) }
+            pagingSourceFactory = { PersonPagingSource(dataSource, isRefreshing) }
         ).flow
     }
 }

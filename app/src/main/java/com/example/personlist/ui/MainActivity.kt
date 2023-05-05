@@ -26,6 +26,7 @@ class MainActivity : BaseActivity() {
         mainViewModel.getPersons()
         binding.recyclerPerson.adapter = personsAdapter
         initObservers()
+        initListeners()
     }
 
     private fun initObservers() {
@@ -34,6 +35,15 @@ class MainActivity : BaseActivity() {
                 lifecycleScope.launch {
                     personsAdapter.submitData(personData)
                 }
+            }
+        }
+    }
+
+    private fun initListeners() {
+        binding.swipeRefresh.apply {
+            setOnRefreshListener {
+                mainViewModel.getPersons(isRefreshing = true)
+                isRefreshing = false
             }
         }
     }
