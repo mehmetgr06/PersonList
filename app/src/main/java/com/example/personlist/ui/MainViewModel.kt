@@ -20,7 +20,7 @@ class MainViewModel @Inject constructor(private val getPersonsUseCase: GetPerson
     private val _personsLiveData: MutableLiveData<PagingData<Person>> = MutableLiveData()
     val personsLiveData: LiveData<PagingData<Person>> = _personsLiveData
 
-    fun getTrainers() {
+    fun getPersons() {
         viewModelScope.launch {
             getPersonsUseCase().cachedIn(this).collectLatest { personsData ->
                 _personsLiveData.value = personsData

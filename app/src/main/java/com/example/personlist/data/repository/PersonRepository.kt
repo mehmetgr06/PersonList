@@ -16,7 +16,7 @@ class PersonRepository @Inject constructor(
     fun getPersonList(): Flow<PagingData<Person>> {
         return Pager(
             config = PagingConfig(
-                pageSize = 10
+                pageSize = 20
             ),
             pagingSourceFactory = { PersonPagingSource(dataSource) }
         ).flow

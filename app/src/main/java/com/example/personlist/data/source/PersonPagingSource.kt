@@ -2,35 +2,32 @@ package com.example.personlist.data.source
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import java.io.IOException
+import kotlin.coroutines.*
 
 class PersonPagingSource(
     private val dataSource: DataSource
 ) : PagingSource<Int, Person>() {
 
-    private var response: FetchResponse? = null //todo: bunlar load'ın içine mi alınmalı?
+    private var response: FetchResponse? = null
     private var personList = mutableListOf<Person>()
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Person> {
-        try {
+        return try {
             val nextPageNumber = params.key ?: 1
-            dataSource.fetch(nextPageNumber.toString()) { fetchResponse, fetchError ->
-                response = fetchResponse
+            suspendCoroutine { continuation ->
+                dataSource.fetch(nextPageNumber.toString()) { fetchResponse, fetchError ->
+                    response = fetchResponse
+                    continuation.resume(Unit)
+                }
             }
             personList.addAll(response?.people.orEmpty())
-            val nextKey = if (personList.isEmpty()) {
-                null
-            } else {
-                nextPageNumber + 1
-            }
-
-            return LoadResult.Page(
+            LoadResult.Page(
                 data = personList,
-                prevKey = if (nextPageNumber == 1) null else -1, //todo: null da olabilir?
-                nextKey = nextKey
+                prevKey = if (nextPageNumber == 1) null else -1,
+                nextKey = response?.next?.toInt()
             )
-        } catch (exception: IOException) {
-            return LoadResult.Error(exception)
+        } catch (exception: Exception) {
+            LoadResult.Error(exception)
         }
     }
 
