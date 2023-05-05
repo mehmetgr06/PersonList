@@ -10,7 +10,6 @@ class PersonPagingSource(
 ) : PagingSource<Int, Person>() {
 
     private var response: FetchResponse? = null
-    private var personList = mutableListOf<Person>()
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Person> {
         return try {
@@ -21,9 +20,9 @@ class PersonPagingSource(
                     continuation.resume(Unit)
                 }
             }
-            personList.addAll(response?.people.orEmpty())
+            val newPersons = response?.people.orEmpty().distinctBy { it.id }
             LoadResult.Page(
-                data = personList,
+                data = newPersons,
                 prevKey = if (nextPageNumber == 1) null else -1,
                 nextKey = response?.next?.toInt()
             )
