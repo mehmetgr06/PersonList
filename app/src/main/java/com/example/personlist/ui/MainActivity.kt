@@ -32,20 +32,26 @@ class MainActivity : BaseActivity() {
     }
 
     private fun initObservers() {
-        with(mainViewModel) {
-            observe(personsLiveData) { personData ->
-                lifecycleScope.launch {
-                    personsAdapter.submitData(personData)
+        binding.apply {
+            with(mainViewModel) {
+                observe(personsLiveData) { personData ->
+                    lifecycleScope.launch {
+                        personsAdapter.submitData(personData)
+                    }
                 }
-            }
-            personsAdapter.addLoadStateListener { loadState ->
-                if (loadState.refresh is LoadState.Loading ||
-                    loadState.append is LoadState.Loading
-                ) {
-                    binding.progressPaging.visibility = View.VISIBLE
-                } else {
-                    binding.progressPaging.visibility = View.GONE
+                personsAdapter.addLoadStateListener { loadState ->
+                    if (loadState.refresh is LoadState.Loading ||
+                        loadState.append is LoadState.Loading
+                    ) {
+                        progressPaging.visibility = View.VISIBLE
+                    } else {
+                        progressPaging.visibility = View.GONE
+                    }
+                    if (loadState.append.endOfPaginationReached && personsAdapter.itemCount < 1) {
+                        textEmptyView.visibility = View.VISIBLE
+                    }
                 }
+
             }
         }
     }
