@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:padding="16dp">
 
     <TextView
@@ -12,4 +13,5 @@
         android:textColor="@color/black"
         android:textSize="18sp"
         tools:text="Mehmet Gür" />
+
 </LinearLayout>

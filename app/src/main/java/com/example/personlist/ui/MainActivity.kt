@@ -1,9 +1,11 @@
 package com.example.personlist.ui
 
 import android.os.Bundle
+import android.view.View
 import androidx.viewbinding.ViewBinding
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import com.example.personlist.common.BaseActivity
 import com.example.personlist.databinding.ActivityMainBinding
 import com.example.personlist.ui.adapter.PersonsAdapter
@@ -34,6 +36,15 @@ class MainActivity : BaseActivity() {
             observe(personsLiveData) { personData ->
                 lifecycleScope.launch {
                     personsAdapter.submitData(personData)
+                }
+            }
+            personsAdapter.addLoadStateListener { loadState ->
+                if (loadState.refresh is LoadState.Loading ||
+                    loadState.append is LoadState.Loading
+                ) {
+                    binding.progressPaging.visibility = View.VISIBLE
+                } else {
+                    binding.progressPaging.visibility = View.GONE
                 }
             }
         }
