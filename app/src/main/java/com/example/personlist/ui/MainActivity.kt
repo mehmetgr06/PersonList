@@ -10,6 +10,7 @@ import com.example.personlist.common.BaseActivity
 import com.example.personlist.databinding.ActivityMainBinding
 import com.example.personlist.ui.adapter.PersonsAdapter
 import com.example.personlist.util.observe
+import com.example.personlist.util.showErrorDialog
 import com.example.personlist.util.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -37,6 +38,11 @@ class MainActivity : BaseActivity() {
                 observe(personsLiveData) { personData ->
                     lifecycleScope.launch {
                         personsAdapter.submitData(personData)
+                    }
+                }
+                observe(errorLiveData) { errorMessage ->
+                    showErrorDialog(errorMessage) {
+                        mainViewModel.getPersons(isRefreshing = true)
                     }
                 }
                 personsAdapter.addLoadStateListener { loadState ->

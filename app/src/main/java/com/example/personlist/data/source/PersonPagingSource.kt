@@ -6,7 +6,8 @@ import kotlin.coroutines.*
 
 class PersonPagingSource(
     private val dataSource: DataSource,
-    private val isRefreshing: Boolean = false
+    private val isRefreshing: Boolean = false,
+    private val handleError: (FetchError) -> Unit
 ) : PagingSource<Int, Person>() {
 
     private var response: FetchResponse? = null
@@ -17,6 +18,9 @@ class PersonPagingSource(
             suspendCoroutine { continuation ->
                 dataSource.fetch(if (isRefreshing) null else nextPageNumber.toString()) { fetchResponse, fetchError ->
                     response = fetchResponse
+                    fetchError?.let {
+                        handleError.invoke(fetchError)
+                    }
                     continuation.resume(Unit)
                 }
             }

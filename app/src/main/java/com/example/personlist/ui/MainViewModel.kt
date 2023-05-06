@@ -22,7 +22,9 @@ class MainViewModel @Inject constructor(private val getPersonsUseCase: GetPerson
 
     fun getPersons(isRefreshing: Boolean = false) {
         viewModelScope.launch {
-            getPersonsUseCase(isRefreshing).cachedIn(this).collectLatest { personsData ->
+            getPersonsUseCase(isRefreshing, handleError = {
+                handleDataError(it)
+            }).cachedIn(this).collectLatest { personsData ->
                 _personsLiveData.value = personsData
             }
         }
