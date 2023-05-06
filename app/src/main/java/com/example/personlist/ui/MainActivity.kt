@@ -53,8 +53,11 @@ class MainActivity : BaseActivity() {
                     } else {
                         progressPaging.visibility = View.GONE
                     }
+
                     if (loadState.append.endOfPaginationReached && personsAdapter.itemCount < 1) {
                         textEmptyView.visibility = View.VISIBLE
+                    } else {
+                        textEmptyView.visibility = View.GONE
                     }
                 }
 

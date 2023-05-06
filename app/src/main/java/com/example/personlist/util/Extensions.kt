@@ -32,8 +32,8 @@ fun Context.showErrorDialog(errorMessage: String, refreshClickListener: () -> Un
         setCancelable(false)
         setPositiveButton("Refresh") { _, _ ->
             scope.launch {
-                delay(3000)
                 refreshClickListener.invoke()
+                delay(3000)
             }
         }
         create().show()
